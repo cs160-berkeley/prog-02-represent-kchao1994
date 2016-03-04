@@ -1,4 +1,4 @@
-package com.example.katherine.represent;
+package com.example.katherine.mylibrary;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -201,6 +201,26 @@ public class Person implements Parcelable {
     public DataMap putToDataMap(DataMap map) {
         map.putString("firstName", firstName);
         map.putString("lastName", lastName);
+        map.putBoolean("party", party);
+        map.putString("email", email);
+        map.putString("website", website);
+        map.putString("latestTweet", latestTweet);
+        map.putString("termStart", termStart);
+        map.putString("termEnd", termEnd);
+        //TODO: seralize bills and committees
+
         return map;
+    }
+
+    public void getFromDataMap(DataMap map) {
+        this.setFirstName(map.getString("firstName"));
+        this.setLastName(map.getString("lastName"));
+        this.setParty(map.getBoolean("party"));
+        this.setEmail(map.getString("email"));
+        this.setWebsite(map.getString("website"));
+        this.setLatestTweet(map.getString("latestTweet"));
+        this.setTermStart(map.getString("termStart"));
+        this.setTermEnd(map.getString("termEnd"));
+
     }
 }

@@ -5,15 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
-
+import com.example.katherine.mylibrary.Person;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +13,6 @@ public class MainActivity extends AppCompatActivity {
     private Button zipButton;
     private String zipCode;
     private ArrayList<Person> listOfPeople;
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +29,6 @@ public class MainActivity extends AppCompatActivity {
                     zipCode = zipButton.getText().toString();
                 }
                 createDummyData();
-
-                // dataItem for watch
-                PutDataMapRequest putDataMapReq = PutDataMapRequest.create("/people");
-                DataMap map = putDataMapReq.getDataMap();
-                listOfPeople.get(0).putToDataMap(map);
-
-                PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
-                PendingResult<DataApi.DataItemResult> pendingResult =
-                        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
-
-
 
                 // update watch view with each representative
                 Intent watchIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
@@ -67,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private void createDummyData() {
         // create people objects based on location
         Person rep1 = new Person();
-        rep1.setFirstName("Barbara");
+        rep1.setFirstName("Barbara2");
         rep1.setLastName("Lee");
         rep1.setParty(Boolean.FALSE);
         rep1.setEmail("barbara@barbara.com");

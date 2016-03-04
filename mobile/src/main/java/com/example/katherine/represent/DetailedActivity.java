@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import com.example.katherine.mylibrary.Person;
+
 
 /**
  * Created by katherine on 29/02/2016.

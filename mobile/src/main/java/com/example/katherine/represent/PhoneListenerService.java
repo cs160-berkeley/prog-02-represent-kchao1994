@@ -3,34 +3,57 @@ package com.example.katherine.represent;
 import android.content.Intent;
 import android.util.Log;
 
+import com.example.katherine.mylibrary.Person;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * Created by katherine on 29/02/2016.
  */
 public class PhoneListenerService extends WearableListenerService {
-    //   WearableListenerServices don't need an iBinder or an onStartCommand: they just need an onMessageReceieved.
-    private static final String TOAST = "/send_toast";
+
+    private static final String DISPLAY_PERSON_PATH = "/display_person";
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        Log.d("T", "in PhoneListenerService, got: " + messageEvent.getPath());
-        if( messageEvent.getPath().equalsIgnoreCase(TOAST) ) {
+        super.onMessageReceived( messageEvent );
+    }
 
-            // Value contains the String we sent over in WatchToPhoneService, "good job"
-            String value = new String(messageEvent.getData(), StandardCharsets.UTF_8);
+    @Override
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        DataMap dataMap;
+        for (DataEvent event : dataEvents) {
 
-            // transition to list view
-            Intent intent = new Intent(this, DetailedActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            // Check the data type
+            if (event.getType() == DataEvent.TYPE_CHANGED) {
+                // Check the data path
+                String path = event.getDataItem().getUri().getPath();
+                if (path.equals(DISPLAY_PERSON_PATH)) {
 
-        } else {
-            super.onMessageReceived( messageEvent );
+                    // get data out from DataMap
+                    dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+                    Person person = new Person();
+                    person.getFromDataMap(dataMap);
+                    Log.v("dataPath", path);
+                    Log.v("Data received on phone:", " " + dataMap);
+                    transitionToDetailedActivity(person);
+
+                }
+
+
+            }
         }
+    }
 
+    public void transitionToDetailedActivity(Person person) {
+        // make intent
+        Intent intent = new Intent(this, DetailedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("person", person);
+        startActivity(intent);
     }
 }

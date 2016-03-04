@@ -4,14 +4,22 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
+import com.example.katherine.mylibrary.Person;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
+import java.util.Date;
+
 
 /**
  * Created by katherine on 29/02/2016.
@@ -19,6 +27,7 @@ import java.util.ArrayList;
 public class PhoneToWatchService extends Service {
 
     private GoogleApiClient mApiClient;
+    private static final String WEARABLE_DATA_PATH = "/people";
 
     @Override
     public void onCreate() {
@@ -49,7 +58,23 @@ public class PhoneToWatchService extends Service {
         // Which rep are we showing?
         final ArrayList<Person> listOfPeople = intent.getParcelableArrayListExtra("listOfPeople");
 
-        // Send the message with the cat name
+        // assemble data map
+        ArrayList<DataMap> listOfPeopleData = new ArrayList<DataMap>();
+
+        for(int i=0; i < listOfPeople.size(); i++) {
+            DataMap dataMap = new DataMap();
+            listOfPeople.get(i).putToDataMap(dataMap);
+            listOfPeopleData.add(dataMap);
+        }
+
+        DataMap finalPeopleMap = new DataMap();
+        finalPeopleMap.putDataMapArrayList("listOfPeople", listOfPeopleData);
+        finalPeopleMap.putLong("time", new Date().getTime());
+
+
+        new SendToDataLayerThread(WEARABLE_DATA_PATH, finalPeopleMap).start();
+
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -85,6 +110,35 @@ public class PhoneToWatchService extends Service {
                 }
             }
         }).start();
+    }
+
+
+
+    class SendToDataLayerThread extends Thread {
+        String path;
+        DataMap dataMap;
+
+        // Constructor for sending data objects to the data layer
+        SendToDataLayerThread(String p, DataMap data) {
+            path = p;
+            dataMap = data;
+        }
+
+        public void run() {
+            // Construct a DataRequest and send over the data layer
+            PutDataMapRequest putDMR = PutDataMapRequest.create(path);
+            putDMR.getDataMap().putAll(dataMap);
+            PutDataRequest request = putDMR.asPutDataRequest();
+            request.setUrgent();
+            DataApi.DataItemResult result = Wearable.DataApi.putDataItem(mApiClient, request).await();
+            if (result.getStatus().isSuccess()) {
+                Log.v("myTag", "DataMap: " + dataMap + " sent successfully to data layer ");
+            }
+            else {
+                // Log an error
+                Log.v("myTag", "ERROR: failed to send DataMap to data layer");
+            }
+        }
     }
 
 }
