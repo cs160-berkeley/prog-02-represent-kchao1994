@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.example.katherine.mylibrary.Person;
 
 import java.util.ArrayList;
@@ -43,12 +44,20 @@ public class ListAdapter extends ArrayAdapter<Person> {
         if (person != null) {
             //party
             String partyTextDisplay;
-            if(!person.getParty()) {
-                partyTextDisplay = "D";
-            } else {
+            if(person.getParty()) {
                 partyTextDisplay = "R";
+            } else {
+                partyTextDisplay = "D";
             }
-            nameText.setText(person.getFirstName() + " " + person.getLastName() + " (" + partyTextDisplay + ")");
+
+            // senator or representative
+            String officeTypeDisplay;
+            if(person.getSenOrRep()) {
+                officeTypeDisplay = "Sen.";
+            } else {
+                officeTypeDisplay = "Rep.";
+            }
+            nameText.setText(officeTypeDisplay + " " + person.getFirstName() + " " + person.getLastName() + " (" + partyTextDisplay + ")");
 
             // website
             websiteText.setOnClickListener(new View.OnClickListener() {

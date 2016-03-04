@@ -40,10 +40,12 @@ public class WatchListenerService extends WearableListenerService {
                 String path = event.getDataItem().getUri().getPath();
                 if (path.equals(WEARABLE_DATA_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+
                     Log.v("dataPath", path);
                     Log.v("Data received on watch:", " " + dataMap);
 
                     // get data out from DataMap
+                    final String location = dataMap.getString("location");
                     ArrayList<DataMap> listOfPeopleData = dataMap.getDataMapArrayList("listOfPeople");
                     listOfPeople = new ArrayList<Person>();
 
@@ -59,7 +61,7 @@ public class WatchListenerService extends WearableListenerService {
                     Runnable myRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            transitionToDisplayActivity(listOfPeople);
+                            transitionToDisplayActivity(listOfPeople, location);
                         }
                     };
                     mainHandler.post(myRunnable);
@@ -69,11 +71,12 @@ public class WatchListenerService extends WearableListenerService {
         }
     }
 
-    public void transitionToDisplayActivity(ArrayList<Person> listOfPeople) {
+    public void transitionToDisplayActivity(ArrayList<Person> listOfPeople, String location) {
         // make intent
         Intent intent = new Intent(this, DisplayActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putParcelableArrayListExtra("listOfPeople", listOfPeople);
+        intent.putExtra("location", location);
         startActivity(intent);
     }
 

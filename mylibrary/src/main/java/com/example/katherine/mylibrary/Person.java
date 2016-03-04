@@ -202,6 +202,7 @@ public class Person implements Parcelable {
         map.putString("firstName", firstName);
         map.putString("lastName", lastName);
         map.putBoolean("party", party);
+        map.putBoolean("senOrRep", senOrRep);
         map.putString("email", email);
         map.putString("website", website);
         map.putString("latestTweet", latestTweet);
@@ -216,6 +217,7 @@ public class Person implements Parcelable {
         this.setFirstName(map.getString("firstName"));
         this.setLastName(map.getString("lastName"));
         this.setParty(map.getBoolean("party"));
+        this.setSenOrRep(map.getBoolean("senOrRep"));
         this.setEmail(map.getString("email"));
         this.setWebsite(map.getString("website"));
         this.setLatestTweet(map.getString("latestTweet"));

@@ -30,6 +30,7 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
     private GoogleApiClient mWatchApiClient;
     private List<Node> nodes = new ArrayList<>();
     private static final String DISPLAY_PERSON_PATH = "/display_person";
+    private static final String SHAKE_PATH = "/shake";
 
     @Override
     public void onCreate() {
@@ -68,26 +69,54 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // get data from DisplayGridViewPagerAdapter and send to data layer
-        final Person person = intent.getParcelableExtra("person");
+        Bundle data = intent.getExtras();
 
-        DataMap dataMap = new DataMap();
-        person.putToDataMap(dataMap);
+        // shake event
+        if(data.getBoolean("shake")) {
+            ArrayList<Person> listOfPeopleRandom = data.getParcelableArrayList("listOfPeople");
+            String location = data.getString("location");
 
-        dataMap.putLong("time", new Date().getTime());
+            // assemble data map
+            ArrayList<DataMap> listOfPeopleData = new ArrayList<DataMap>();
 
-        new SendToDataLayerThread(DISPLAY_PERSON_PATH, dataMap).start();
-
-        // Send the message with the cat name
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //first, connect to the apiclient
-                mWatchApiClient.connect();
-                //now that you're connected, send a massage with the cat name
-                sendMessage("/" + person.getFirstName() + "-" + person.getLastName(), "");
+            for(int i=0; i < listOfPeopleRandom.size(); i++) {
+                DataMap dataMap = new DataMap();
+                listOfPeopleRandom.get(i).putToDataMap(dataMap);
+                listOfPeopleData.add(dataMap);
             }
-        }).start();
+
+            DataMap finalPeopleMap = new DataMap();
+            finalPeopleMap.putDataMapArrayList("listOfPeople", listOfPeopleData);
+            finalPeopleMap.putLong("time", new Date().getTime());
+            finalPeopleMap.putString("location", location);
+
+            new SendToDataLayerThread(SHAKE_PATH, finalPeopleMap).start();
+        }
+
+        // detail person view
+        else {
+            // get data from DisplayGridViewPagerAdapter and send to data layer
+            final Person person = intent.getParcelableExtra("person");
+
+            DataMap dataMap = new DataMap();
+            person.putToDataMap(dataMap);
+
+            dataMap.putLong("time", new Date().getTime());
+
+            new SendToDataLayerThread(DISPLAY_PERSON_PATH, dataMap).start();
+
+            // Send the message with the cat name
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //first, connect to the apiclient
+                    mWatchApiClient.connect();
+                    //now that you're connected, send a massage with the cat name
+                    sendMessage("/" + person.getFirstName() + "-" + person.getLastName(), "");
+                }
+            }).start();
+        }
+
 
         return START_STICKY;
     }
@@ -126,7 +155,7 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
             //request.setUrgent();
             DataApi.DataItemResult result = Wearable.DataApi.putDataItem(mWatchApiClient, request).await();
             if (result.getStatus().isSuccess()) {
-                Log.v("myTag", "DataMap: " + dataMap + " sent successfully to data layer ");
+                Log.v("myTag", "WatchToPhone DataMap: " + dataMap + " sent successfully to data layer ");
             }
             else {
                 // Log an error

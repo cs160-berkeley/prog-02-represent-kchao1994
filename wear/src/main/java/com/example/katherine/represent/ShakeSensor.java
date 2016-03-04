@@ -1,57 +1,52 @@
 package com.example.katherine.represent;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.example.katherine.mylibrary.Person;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity implements SensorEventListener {
+/**
+ * Created by katherine on 04/03/2016.
+ */
+public class ShakeSensor implements SensorEventListener {
 
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
+    private final SensorManager mSensorManager;
+    private final Sensor mSensor;
+
+    private final MainActivity mainActivity;
+
     private float sensorAcceleration;
-    private float oldAcceleration;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+    public ShakeSensor(SensorManager sm, MainActivity ma) {
+        mSensorManager = sm;
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mainActivity = ma;
+        sensorAcceleration = 0.0f;
     }
 
-
-
-    @Override
     protected void onResume() {
-        super.onResume();
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    @Override
     protected void onPause() {
-        super.onPause();
         mSensorManager.unregisterListener(this);
     }
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
+        float oldAcceleration = sensorAcceleration;
         sensorAcceleration = event.values[0];
-        if(sensorAcceleration != oldAcceleration && sensorAcceleration > 50.0) {
+
+        if(!(sensorAcceleration == oldAcceleration) && sensorAcceleration > 50.0) {
             Log.d("value", event.values[0] + " changed!");
             makeShake();
         }
-        oldAcceleration = sensorAcceleration;
     }
 
     @Override
@@ -68,7 +63,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         rep1.setSenOrRep(false);
         rep1.setEmail("barbara@barbara.com");
         rep1.setWebsite("http://barbara.com");
-        rep1.setLatestTweet("Hi, this is my latest tweet! --Barbara Boxer");
+        rep1.setLatestTweet("Hi, this is my latest tweet!");
         rep1.setTermStart("2012");
         rep1.setTermEnd("2014");
 
@@ -86,7 +81,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         Person sen1 = new Person();
         sen1.setFirstName("Suzie");
         sen1.setLastName("Random");
-        sen1.setParty(false);
+        sen1.setParty(true);
         sen1.setSenOrRep(true);
         sen1.setEmail("loni@loni.com");
         sen1.setWebsite("http://loni.com");
@@ -110,17 +105,16 @@ public class MainActivity extends Activity implements SensorEventListener {
         listOfPeopleRandom.add(sen1);
         listOfPeopleRandom.add(sen2);
 
-        Intent watchIntent = new Intent(getBaseContext(), DisplayActivity.class);
+        Intent watchIntent = new Intent(mainActivity.getBaseContext(), DisplayActivity.class);
         watchIntent.putParcelableArrayListExtra("listOfPeople", listOfPeopleRandom);
         watchIntent.putExtra("location", newLocation);
-        startActivity(watchIntent);
+        mainActivity.startActivity(watchIntent);
 
-        Intent phoneIntent = new Intent(getBaseContext(), WatchToPhoneService.class);
+        Intent phoneIntent = new Intent(mainActivity.getBaseContext(), WatchToPhoneService.class);
         phoneIntent.putParcelableArrayListExtra("listOfPeople", listOfPeopleRandom);
         phoneIntent.putExtra("location", newLocation);
         phoneIntent.putExtra("shake", true);
-        startService(phoneIntent);
+        mainActivity.startService(phoneIntent);
     }
-
 
 }

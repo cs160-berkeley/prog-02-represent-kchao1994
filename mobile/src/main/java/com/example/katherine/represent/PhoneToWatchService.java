@@ -57,6 +57,7 @@ public class PhoneToWatchService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Which rep are we showing?
         final ArrayList<Person> listOfPeople = intent.getParcelableArrayListExtra("listOfPeople");
+        final String location = intent.getExtras().getString("location");
 
         // assemble data map
         ArrayList<DataMap> listOfPeopleData = new ArrayList<DataMap>();
@@ -70,6 +71,7 @@ public class PhoneToWatchService extends Service {
         DataMap finalPeopleMap = new DataMap();
         finalPeopleMap.putDataMapArrayList("listOfPeople", listOfPeopleData);
         finalPeopleMap.putLong("time", new Date().getTime());
+        finalPeopleMap.putString("location", location);
 
 
         new SendToDataLayerThread(WEARABLE_DATA_PATH, finalPeopleMap).start();

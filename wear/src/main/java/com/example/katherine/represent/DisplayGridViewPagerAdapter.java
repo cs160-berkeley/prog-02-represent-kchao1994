@@ -20,20 +20,53 @@ public class DisplayGridViewPagerAdapter extends FragmentGridPagerAdapter {
 
     private final Context mContext;
     private ArrayList<Person> listOfPeople;
+    private String location;
+    private String obamaVote;
+    private String romneyVote;
 
-    public DisplayGridViewPagerAdapter(Context context, FragmentManager fm, ArrayList<Person> listOfPeople) {
+    public DisplayGridViewPagerAdapter(Context context, FragmentManager fm, ArrayList<Person> listOfPeople, String location) {
         super(fm);
         this.mContext = context;
         this.listOfPeople = listOfPeople;
+        this.location = location;
+        setVotes();
     }
 
     public Fragment getFragment(int row, int col) {
-        //PersonFragment fragment = CardFragment.create("Card", listOfPeople.get(col).getFirstName());
-        PersonFragment fragment = new PersonFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("person", listOfPeople.get(col));
-        fragment.setArguments(bundle);
-        return fragment;
+        if(col < listOfPeople.size()) {
+            PersonFragment fragment = new PersonFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("person", listOfPeople.get(col));
+            fragment.setArguments(bundle);
+            return fragment;
+        }
+        else { // election view
+            VoteViewFragment electionView = new VoteViewFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("location", location);
+            bundle.putString("obamaVote", obamaVote);
+            bundle.putString("romneyVote", romneyVote);
+            electionView.setArguments(bundle);
+            return electionView;
+        }
+
+    }
+
+    private void setVotes() {
+        if(location.equals("Berkeley")) {
+            obamaVote = "75";
+            romneyVote = "25";
+        }
+
+        else if(location.equals("95757")) {
+            obamaVote = "40";
+            romneyVote = "60";
+        }
+
+        else {
+            obamaVote = "50";
+            romneyVote = "50";
+        }
     }
 
     @Override
@@ -43,12 +76,12 @@ public class DisplayGridViewPagerAdapter extends FragmentGridPagerAdapter {
 
     @Override
     public int getColumnCount(int i) {
-        return listOfPeople.size();
+        return listOfPeople.size() + 1;
     }
 
+
+
     public static class PersonFragment extends CardFragment {
-
-
         @Override
         public View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = (View) inflater.inflate(R.layout.person_card, container, false);
@@ -58,7 +91,6 @@ public class DisplayGridViewPagerAdapter extends FragmentGridPagerAdapter {
             final Person person = this.getArguments().getParcelable("person");
             textView.setText(person.getFirstName() + " " + person.getLastName());
 
-
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -67,6 +99,28 @@ public class DisplayGridViewPagerAdapter extends FragmentGridPagerAdapter {
                     context.startService(i);
                 }
             });
+            return view;
+        }
+    }
+
+
+
+    public static class VoteViewFragment extends CardFragment {
+        @Override
+        public View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = (View) inflater.inflate(R.layout.election_results, container, false);
+            final Context context = container.getContext();
+            Bundle data = this.getArguments();
+
+            TextView locationTextView = (TextView) view.findViewById(R.id.location_election);
+            locationTextView.setText(data.getString("location"));
+
+            TextView obamaTextView = (TextView) view.findViewById(R.id.vote_obama);
+            obamaTextView.setText(data.getString("obamaVote") + "% Obama");
+
+            TextView romneyTextView = (TextView) view.findViewById(R.id.vote_romney);
+            romneyTextView.setText(data.getString("romneyVote") + "% Romney");
+
             return view;
         }
     }

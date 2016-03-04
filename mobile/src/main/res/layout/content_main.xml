@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/zip_code_enter"
         android:layout_below="@+id/textView2"
         android:layout_alignEnd="@+id/textView2" />
 
@@ -44,22 +44,22 @@
         android:layout_height="wrap_content"
         android:text="GO"
         android:id="@+id/zip_button"
-        android:layout_alignBottom="@+id/editText"
-        android:layout_toEndOf="@+id/editText" />
+        android:layout_alignBottom="@+id/zip_code_enter"
+        android:layout_toEndOf="@+id/zip_code_enter" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="or"
         android:id="@+id/textView3"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/zip_code_enter"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Use your current location"
-        android:id="@+id/textView4"
+        android:id="@+id/curr_location"
         android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp" />

@@ -22,12 +22,12 @@ public class ListActivity extends Activity {
         setContentView(R.layout.list);
 
         Intent i = getIntent();
-        final String zipCode = i.getExtras().getString("location");
+        String location = i.getExtras().getString("location");
         final ArrayList<Person> listOfPeople = i.getParcelableArrayListExtra("listOfPeople");
 
         //populate zipcode
         TextView zipCodeText = (TextView) findViewById(R.id.zipcode_list);
-        zipCodeText.setText("Current Location: " + zipCode);
+        zipCodeText.setText("Current Location: " + location);
 
         //populate list
         ListAdapter adapter = new ListAdapter(this, listOfPeople);
