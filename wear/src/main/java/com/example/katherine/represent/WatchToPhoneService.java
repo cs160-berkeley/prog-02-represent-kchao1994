@@ -73,6 +73,7 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
 
         // shake event
         if(data.getBoolean("shake")) {
+            /*
             ArrayList<Person> listOfPeopleRandom = data.getParcelableArrayList("listOfPeople");
             String location = data.getString("location");
 
@@ -89,8 +90,18 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
             finalPeopleMap.putDataMapArrayList("listOfPeople", listOfPeopleData);
             finalPeopleMap.putLong("time", new Date().getTime());
             finalPeopleMap.putString("location", location);
+            */
 
-            new SendToDataLayerThread(SHAKE_PATH, finalPeopleMap).start();
+            // Send the message with the cat name
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //first, connect to the apiclient
+                    mWatchApiClient.connect();
+                    //now that you're connected, send a massage with the cat name
+                    sendMessage("/shake", "");
+                }
+            }).start();
         }
 
         // detail person view
@@ -100,7 +111,6 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
 
             DataMap dataMap = new DataMap();
             person.putToDataMap(dataMap);
-
             dataMap.putLong("time", new Date().getTime());
 
             new SendToDataLayerThread(DISPLAY_PERSON_PATH, dataMap).start();
@@ -112,7 +122,6 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
                     //first, connect to the apiclient
                     mWatchApiClient.connect();
                     //now that you're connected, send a massage with the cat name
-                    sendMessage("/" + person.getFirstName() + "-" + person.getLastName(), "");
                 }
             }).start();
         }
@@ -121,12 +130,12 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
         return START_STICKY;
     }
 
-    @Override //we need this to implement GoogleApiClient.ConnectionsCallback
+    @Override
     public void onConnectionSuspended(int i) {}
 
 
 
-    private void sendMessage(final String path, final String text ) {
+    private void sendMessage(final String path, String text) {
         for (Node node : nodes) {
             Log.d("T", path);
             Wearable.MessageApi.sendMessage(

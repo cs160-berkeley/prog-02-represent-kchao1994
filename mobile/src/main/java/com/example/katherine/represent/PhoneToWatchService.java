@@ -55,37 +55,52 @@ public class PhoneToWatchService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Which rep are we showing?
-        final ArrayList<Person> listOfPeople = intent.getParcelableArrayListExtra("listOfPeople");
-        final String location = intent.getExtras().getString("location");
+        while(intent != null) {
+            // Which rep are we showing?
+            final ArrayList<Person> listOfPeople = intent.getParcelableArrayListExtra("listOfPeople");
+            Bundle data = intent.getExtras();
+            final Boolean isZipCode = data.getBoolean("isZipCode");
+            Log.d("isZipCode phonetowatch", isZipCode + " ");
+            final String cityNameFromGMaps = data.getString("cityNameFromGMaps");
+            final String zipCode = data.getString("zipCode");
+            final String obamaVote = data.getString("obamaVote");
+            final String romneyVote = data.getString("romneyVote");
 
-        // assemble data map
-        ArrayList<DataMap> listOfPeopleData = new ArrayList<DataMap>();
+            // assemble data map
+            ArrayList<DataMap> listOfPeopleData = new ArrayList<DataMap>();
 
-        for(int i=0; i < listOfPeople.size(); i++) {
-            DataMap dataMap = new DataMap();
-            listOfPeople.get(i).putToDataMap(dataMap);
-            listOfPeopleData.add(dataMap);
+            for(int i=0; i < listOfPeople.size(); i++) {
+                DataMap dataMap = new DataMap();
+                listOfPeople.get(i).putToDataMap(dataMap);
+                listOfPeopleData.add(dataMap);
+            }
+
+            DataMap finalPeopleMap = new DataMap();
+            finalPeopleMap.putBoolean("isZipCode", isZipCode);
+            finalPeopleMap.putDataMapArrayList("listOfPeople", listOfPeopleData);
+            finalPeopleMap.putLong("time", new Date().getTime());
+            finalPeopleMap.putString("cityNameFromGMaps", cityNameFromGMaps);
+            finalPeopleMap.putString("zipCode", zipCode);
+            finalPeopleMap.putString("obamaVote", obamaVote);
+            finalPeopleMap.putString("romneyVote", romneyVote);
+
+
+            new SendToDataLayerThread(WEARABLE_DATA_PATH, finalPeopleMap).start();
+
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //first, connect to the apiclient
+                    mApiClient.connect();
+                    //now that you're connected, send a massage with the cat name
+                    sendMessage("/" + "barbara-lee", "barbara-lee");
+                }
+            }).start();
+
+            break;
         }
 
-        DataMap finalPeopleMap = new DataMap();
-        finalPeopleMap.putDataMapArrayList("listOfPeople", listOfPeopleData);
-        finalPeopleMap.putLong("time", new Date().getTime());
-        finalPeopleMap.putString("location", location);
-
-
-        new SendToDataLayerThread(WEARABLE_DATA_PATH, finalPeopleMap).start();
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //first, connect to the apiclient
-                mApiClient.connect();
-                //now that you're connected, send a massage with the cat name
-                sendMessage("/" + "barbara-lee", "barbara-lee");
-            }
-        }).start();
 
         return START_STICKY;
     }
@@ -103,12 +118,8 @@ public class PhoneToWatchService extends Service {
             public void run() {
                 NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes( mApiClient ).await();
                 for(Node node : nodes.getNodes()) {
-                    //we find 'nodes', which are nearby bluetooth devices (aka emulators)
-                    //send a message for each of these nodes (just one, for an emulator)
                     MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(
                             mApiClient, node.getId(), path, text.getBytes() ).await();
-                    //4 arguments: api client, the node ID, the path (for the listener to parse),
-                    //and the message itself (you need to convert it to bytes.)
                 }
             }
         }).start();
@@ -131,7 +142,7 @@ public class PhoneToWatchService extends Service {
             PutDataMapRequest putDMR = PutDataMapRequest.create(path);
             putDMR.getDataMap().putAll(dataMap);
             PutDataRequest request = putDMR.asPutDataRequest();
-            request.setUrgent();
+            //request.setUrgent();
             DataApi.DataItemResult result = Wearable.DataApi.putDataItem(mApiClient, request).await();
             if (result.getStatus().isSuccess()) {
                 Log.v("myTag", "DataMap: " + dataMap + " sent successfully to data layer ");

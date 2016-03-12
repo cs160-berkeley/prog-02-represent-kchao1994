@@ -12,12 +12,17 @@ import java.util.ArrayList;
  */
 @SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
 public class Person implements Parcelable {
-    private Boolean senOrRep; // 0 for rep, 1 for senator
+    private String id;
+    private String senOrRep; // 0 for rep, 1 for senator
     private String firstName;
     private String lastName;
-    private Boolean party; // 0 for democrat, 1 for republican
+    private String party; // 0 for democrat, 1 for republican
     private String email;
     private String website;
+
+
+
+    private String twitterHandle;
     private String latestTweet;
     private String termStart;
     private String termEnd;
@@ -29,12 +34,15 @@ public class Person implements Parcelable {
         this.committees = new ArrayList<String>();
     }
 
+    public String getId() { return id; }
 
-    public Boolean getSenOrRep() {
+    public void setId(String id) { this.id = id; }
+
+    public String getSenOrRep() {
         return senOrRep;
     }
 
-    public void setSenOrRep(Boolean senOrRep) {
+    public void setSenOrRep(String senOrRep) {
         this.senOrRep = senOrRep;
     }
 
@@ -54,11 +62,11 @@ public class Person implements Parcelable {
         this.lastName = lastName;
     }
 
-    public Boolean getParty() {
+    public String getParty() {
         return party;
     }
 
-    public void setParty(Boolean party) {
+    public void setParty(String party) {
         this.party = party;
     }
 
@@ -77,6 +85,10 @@ public class Person implements Parcelable {
     public void setWebsite(String website) {
         this.website = website;
     }
+
+    public String getTwitterHandle() { return twitterHandle; }
+
+    public void setTwitterHandle(String twitterHandle) { this.twitterHandle = twitterHandle; }
 
     public String getLatestTweet() {
         return latestTweet;
@@ -119,17 +131,15 @@ public class Person implements Parcelable {
     }
 
 
-
-
     protected Person(Parcel in) {
-        byte senOrRepVal = in.readByte();
-        senOrRep = senOrRepVal == 0x02 ? null : senOrRepVal != 0x00;
+        id = in.readString();
+        senOrRep = in.readString();
         firstName = in.readString();
         lastName = in.readString();
-        byte partyVal = in.readByte();
-        party = partyVal == 0x02 ? null : partyVal != 0x00;
+        party = in.readString();
         email = in.readString();
         website = in.readString();
+        twitterHandle = in.readString();
         latestTweet = in.readString();
         termStart = in.readString();
         termEnd = in.readString();
@@ -154,20 +164,14 @@ public class Person implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (senOrRep == null) {
-            dest.writeByte((byte) (0x02));
-        } else {
-            dest.writeByte((byte) (senOrRep ? 0x01 : 0x00));
-        }
+        dest.writeString(id);
+        dest.writeString(senOrRep);
         dest.writeString(firstName);
         dest.writeString(lastName);
-        if (party == null) {
-            dest.writeByte((byte) (0x02));
-        } else {
-            dest.writeByte((byte) (party ? 0x01 : 0x00));
-        }
+        dest.writeString(party);
         dest.writeString(email);
         dest.writeString(website);
+        dest.writeString(twitterHandle);
         dest.writeString(latestTweet);
         dest.writeString(termStart);
         dest.writeString(termEnd);
@@ -199,30 +203,61 @@ public class Person implements Parcelable {
     };
 
     public DataMap putToDataMap(DataMap map) {
+        map.putString("id", id);
         map.putString("firstName", firstName);
         map.putString("lastName", lastName);
-        map.putBoolean("party", party);
-        map.putBoolean("senOrRep", senOrRep);
+        map.putString("party", party);
+        map.putString("senOrRep", senOrRep);
         map.putString("email", email);
         map.putString("website", website);
+        map.putString("twitterHandle", latestTweet);
         map.putString("latestTweet", latestTweet);
         map.putString("termStart", termStart);
         map.putString("termEnd", termEnd);
-        //TODO: seralize bills and committees
+        map.putStringArrayList("bills", bills);
+        map.putStringArrayList("committees", committees);
 
         return map;
     }
 
     public void getFromDataMap(DataMap map) {
+        this.setId(map.getString("id"));
         this.setFirstName(map.getString("firstName"));
         this.setLastName(map.getString("lastName"));
-        this.setParty(map.getBoolean("party"));
-        this.setSenOrRep(map.getBoolean("senOrRep"));
+        this.setParty(map.getString("party"));
+        this.setSenOrRep(map.getString("senOrRep"));
         this.setEmail(map.getString("email"));
         this.setWebsite(map.getString("website"));
+        this.setTwitterHandle(map.getString("twitterHandle"));
         this.setLatestTweet(map.getString("latestTweet"));
         this.setTermStart(map.getString("termStart"));
         this.setTermEnd(map.getString("termEnd"));
+        this.setCommittees(map.getStringArrayList("committees"));
+        this.setBills(map.getStringArrayList("bills"));
 
+    }
+
+    public String toString() {
+        String result = new String();
+        result = result + "ID: " + id + "\n";
+        result = result + "First Name: " + firstName + "\n";
+        result = result + "Last Name: " + lastName + "\n";
+        result = result + "Party: " + party + "\n";
+        result = result + "senOrRep: " + senOrRep + "\n";
+        result = result + "Email: " + email + "\n";
+        result = result + "Website: " + website + "\n";
+        result = result + "Twitter Handle: " + twitterHandle + "\n";
+        result = result + "Latest Tweet: " + latestTweet + "\n";
+        result = result + "Term Start: " + termStart + "\n";
+        result = result + "Term End: " + termEnd + "\n";
+        result = result + "Committees: " + "\n";
+        for(int i = 0; i < committees.size(); i++) {
+            result = result + "     " + committees.get(i) + "\n";
+        }
+        result = result + "Bills: " + "\n";
+        for(int i = 0; i < bills.size(); i++) {
+            result = result + "     " + bills.get(i) + "\n";
+        }
+        return result;
     }
 }

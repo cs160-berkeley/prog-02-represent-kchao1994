@@ -1,8 +1,6 @@
 package com.example.katherine.represent;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.example.katherine.mylibrary.Person;
@@ -44,39 +42,52 @@ public class WatchListenerService extends WearableListenerService {
                     Log.v("dataPath", path);
                     Log.v("Data received on watch:", " " + dataMap);
 
-                    // get data out from DataMap
-                    final String location = dataMap.getString("location");
-                    ArrayList<DataMap> listOfPeopleData = dataMap.getDataMapArrayList("listOfPeople");
-                    listOfPeople = new ArrayList<Person>();
-
-                    for(int i = 0; i < listOfPeopleData.size(); i++) {
-                        DataMap personMap = listOfPeopleData.get(i);
-                        Person person = new Person();
-                        person.getFromDataMap(personMap);
-                        listOfPeople.add(person);
-                    }
-
+                    transitionToDisplayActivity(dataMap);
+/*
                     // run activity
                     Handler mainHandler = new Handler(Looper.getMainLooper());
                     Runnable myRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            transitionToDisplayActivity(listOfPeople, location);
+                            transitionToDisplayActivity(dataMap);
                         }
                     };
                     mainHandler.post(myRunnable);
+                    */
                 }
 
             }
         }
     }
 
-    public void transitionToDisplayActivity(ArrayList<Person> listOfPeople, String location) {
+    public void transitionToDisplayActivity(DataMap dataMap) {
+        // get data out from DataMap
+        final Boolean isZipCode = dataMap.getBoolean("izZipCode");
+        final String cityNameFromGMaps = dataMap.getString("cityNameFromGMaps");
+        final String zipCode = dataMap.getString("zipCode");
+        final String romneyVote = dataMap.getString("romneyVote");
+        final String obamaVote = dataMap.getString("obamaVote");
+        Log.d("isZipCode watchlistener", isZipCode + " ");
+
+        ArrayList<DataMap> listOfPeopleData = dataMap.getDataMapArrayList("listOfPeople");
+        listOfPeople = new ArrayList<Person>();
+
+        for(int i = 0; i < listOfPeopleData.size(); i++) {
+            DataMap personMap = listOfPeopleData.get(i);
+            Person person = new Person();
+            person.getFromDataMap(personMap);
+            listOfPeople.add(person);
+        }
+
         // make intent
         Intent intent = new Intent(this, DisplayActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putParcelableArrayListExtra("listOfPeople", listOfPeople);
-        intent.putExtra("location", location);
+        intent.putExtra("isZipCode", isZipCode);
+        intent.putExtra("cityNameFromGMaps", cityNameFromGMaps);
+        intent.putExtra("zipCode", zipCode);
+        intent.putExtra("romneyVote", romneyVote);
+        intent.putExtra("obamaVote", obamaVote);
         startActivity(intent);
     }
 

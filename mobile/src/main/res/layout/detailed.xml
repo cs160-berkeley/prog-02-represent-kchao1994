@@ -1,105 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollView"
     tools:context="com.example.katherine.represent.DetailedActivity"
-    android:weightSum="1">
-
-    <ImageView
-        android:layout_width="204dp"
-        android:layout_height="164dp"
-        android:id="@+id/imageView" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Barbara Lee"
-        android:id="@+id/name_detailed" />
+    android:weightSum="1"
+    android:padding="0dp"
+    android:paddingLeft="0dp"
+    android:paddingTop="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="0dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/image_detailed" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Barbara Lee"
+            android:id="@+id/name_detailed"
+            android:background="#8f8f8f"
+            android:textColor="@android:color/white"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:textSize="23dp"
+            android:gravity="center" />
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Party"
                 android:id="@+id/party_detailed"
-                android:layout_weight=".5" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Website"
-                android:id="@+id/website_detailed"
-                android:layout_weight="0.45"
-                android:layout_gravity="center_horizontal" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                android:drawableLeft="@drawable/party_icon"
+                android:layout_weight=".5"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Term"
                 android:id="@+id/term_detailed"
-                android:layout_weight=".5" />
+                android:drawableLeft="@drawable/calendar_icon"
+                android:layout_weight=".5"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Website"
+                android:drawableLeft="@drawable/website_icon"
+                android:id="@+id/website_detailed"
+                android:layout_weight="0.45"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Email"
                 android:id="@+id/email_detailed"
+                android:drawableLeft="@drawable/email_icon"
                 android:layout_weight=".5"
-                android:layout_gravity="center_horizontal" />
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Current Committees"
+            android:id="@+id/textView8"
+            android:background="#d1d1d1"
+            android:textColor="@android:color/black"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:id="@+id/committees_detailed"
+            android:choiceMode="none"
+            android:layout_weight="2" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Recent Bills Sponsored"
+            android:id="@+id/textView9"
+            android:background="#d1d1d1"
+            android:textColor="@android:color/black"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:id="@+id/bills_detailed"
+            android:choiceMode="none"
+            android:layout_weight="2" />
+
+
+
+
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Current Committees"
-        android:id="@+id/textView8" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="example committee"
-        android:id="@+id/commiteesList" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Recent Bills Sponsored"
-        android:id="@+id/textView9" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="example bill"
-        android:id="@+id/billsList" />
-
-</LinearLayout>
+</ScrollView>

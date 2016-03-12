@@ -27,6 +27,16 @@ public class PhoneListenerService extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived( messageEvent );
+
+        if( messageEvent.getPath().equalsIgnoreCase(SHAKE_PATH) ) {
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("shake", "shaken");
+            Log.d("got here", "got here");
+            startActivity(intent);
+
+        }
     }
 
     @Override

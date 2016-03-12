@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/americanflag"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.katherine.represent.MainActivity"
     tools:showIn="@layout/activity_main">
@@ -20,7 +21,9 @@
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="160dp" />
+        android:layout_marginTop="160dp"
+        android:textColor="#fff"
+        android:visibility="invisible" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +31,9 @@
         android:text="To get started"
         android:id="@+id/textView2"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="18dp"
+        android:textColor="#171717" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -37,7 +42,13 @@
         android:ems="10"
         android:id="@+id/zip_code_enter"
         android:layout_below="@+id/textView2"
-        android:layout_alignEnd="@+id/textView2" />
+        android:layout_alignEnd="@+id/textView2"
+        android:layout_marginTop="22dp"
+        android:hint="enter your zip code"
+        android:selectAllOnFocus="true"
+        android:textColorHint="#ededed"
+        android:textColor="#fff"
+        android:backgroundTint="#171717" />
 
     <Button
         android:layout_width="wrap_content"
@@ -45,7 +56,9 @@
         android:text="GO"
         android:id="@+id/zip_button"
         android:layout_alignBottom="@+id/zip_code_enter"
-        android:layout_toEndOf="@+id/zip_code_enter" />
+        android:layout_toEndOf="@+id/zip_code_enter"
+        android:background="#ffeb8e"
+        android:padding="0dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -53,7 +66,10 @@
         android:text="or"
         android:id="@+id/textView3"
         android:layout_below="@+id/zip_code_enter"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:textSize="18dp"
+        android:textColor="#171717" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -62,5 +78,7 @@
         android:id="@+id/curr_location"
         android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp" />
+        android:layout_marginTop="27dp"
+        android:textColor="#fff"
+        android:textSize="20dp" />
 </RelativeLayout>

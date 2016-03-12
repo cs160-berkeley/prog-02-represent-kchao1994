@@ -24,12 +24,13 @@ public class DisplayGridViewPagerAdapter extends FragmentGridPagerAdapter {
     private String obamaVote;
     private String romneyVote;
 
-    public DisplayGridViewPagerAdapter(Context context, FragmentManager fm, ArrayList<Person> listOfPeople, String location) {
+    public DisplayGridViewPagerAdapter(Context context, FragmentManager fm, ArrayList<Person> listOfPeople, String location, String obamaVote, String romneyVote) {
         super(fm);
         this.mContext = context;
         this.listOfPeople = listOfPeople;
         this.location = location;
-        setVotes();
+        this.obamaVote = obamaVote;
+        this.romneyVote = romneyVote;
     }
 
     public Fragment getFragment(int row, int col) {

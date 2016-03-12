@@ -59,8 +59,8 @@ public class ShakeSensor implements SensorEventListener {
         Person rep1 = new Person();
         rep1.setFirstName("Random");
         rep1.setLastName("Representative");
-        rep1.setParty(true);
-        rep1.setSenOrRep(false);
+        rep1.setParty("");
+        rep1.setSenOrRep("");
         rep1.setEmail("barbara@barbara.com");
         rep1.setWebsite("http://barbara.com");
         rep1.setLatestTweet("Hi, this is my latest tweet!");
@@ -81,8 +81,8 @@ public class ShakeSensor implements SensorEventListener {
         Person sen1 = new Person();
         sen1.setFirstName("Suzie");
         sen1.setLastName("Random");
-        sen1.setParty(true);
-        sen1.setSenOrRep(true);
+        sen1.setParty("");
+        sen1.setSenOrRep("");
         sen1.setEmail("loni@loni.com");
         sen1.setWebsite("http://loni.com");
         sen1.setLatestTweet("Hi, this is my latest tweet! Vote for me.");
@@ -92,8 +92,8 @@ public class ShakeSensor implements SensorEventListener {
         Person sen2 = new Person();
         sen2.setFirstName("Mike");
         sen2.setLastName("Random");
-        sen2.setParty(true);
-        sen2.setSenOrRep(true);
+        sen2.setParty("");
+        sen2.setSenOrRep("");
         sen2.setEmail("loni@loni.com");
         sen2.setWebsite("http://loni.com");
         sen2.setLatestTweet("Hi, this is my latest tweet! Vote for me.");

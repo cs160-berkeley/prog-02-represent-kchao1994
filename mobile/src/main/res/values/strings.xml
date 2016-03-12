@@ -2,4 +2,6 @@
     <string name="app_name">Represent</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_detailed">Detailed</string>
+    <string name="republican_bg_color">#ef3030</string>
+    <string name="democrat_bg_color">#304bef</string>
 </resources>
