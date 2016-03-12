@@ -1,20 +1,26 @@
 # PROG 02: Represent!
 
-Briefly describe your app here.
+View the representatives and senators in any district in an easy to use and informative app.
 
 ## Authors
 
-FirstName LastName ([your_email@berkeley.edu](mailto:your_email@berkeley.edu))
+Katherine Chao ([kchao1994@berkeley.edu](mailto:kchao1994@berkeley.edu))
 
 ## Demo Video
 
-See [your demo video title here] (https://link_to_your_video)
+See [the demo video]. (https://vimeo.com/158715168)
 
 ## Screenshots
 
-<img src="screenshots/main.png" height="400" alt="Screenshot"/>
+<img src="http://i.imgur.com/Gp3DBZe.png" height="300" />
+<img src="http://i.imgur.com/sueg95f.png" height="300" />
+<img src="http://i.imgur.com/feAo9IY.png" height="300" /><br />
+<img src="http://i.imgur.com/6HPcqgc.png" height="150" />
+<img src="http://i.imgur.com/Id72dnQ.png" height="150" />
+<img src="http://i.imgur.com/mwBkiry.png" height="150" />
+
+
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Any other support
+Many people on Stack overflow in which I have lost track of their contributions. :(
